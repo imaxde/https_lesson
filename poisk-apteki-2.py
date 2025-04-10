@@ -45,7 +45,7 @@ apikey = "f3a0fe3a-b07e-4840-a1da-06f18b2ddf13"
 map_params = {
     "apikey": apikey,
     # добавим точки, чтобы указать найденную аптеку
-    "pt": "{0},pm2dgl~{1},pm2dgl".format(org_point, address_ll)
+    "pt": "{0},pm2dgl~{1},pm2wtl".format(org_point, address_ll)
 }
 
 dst = round(lonlat_distance(map(float, start_point), map(float, point)), 2)
