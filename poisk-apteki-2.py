@@ -1,6 +1,7 @@
 import sys
 from io import BytesIO
 from search import object_position
+from distance import lonlat_distance
 import requests
 from PIL import Image
 
@@ -8,7 +9,8 @@ from PIL import Image
 search_api_server = "https://search-maps.yandex.ru/v1/"
 api_key = "dda3ddba-c9ea-4ead-9010-f43fbc15c6e3"
 location = input("Введите адрес: ")
-address_ll = ",".join(object_position(location)[0:2])
+start_point = object_position(location)[0:2]
+address_ll = ",".join(start_point)
 
 search_params = {
     "apikey": api_key,
@@ -31,6 +33,7 @@ organization = json_response["features"][0]
 org_name = organization["properties"]["CompanyMetaData"]["name"]
 # Адрес организации.
 org_address = organization["properties"]["CompanyMetaData"]["address"]
+work_time = organization["properties"]["CompanyMetaData"]["Hours"]["text"]
 
 # Получаем координаты ответа.
 point = organization["geometry"]["coordinates"]
@@ -45,9 +48,16 @@ map_params = {
     "pt": "{0},pm2dgl~{1},pm2dgl".format(org_point, address_ll)
 }
 
+dst = round(lonlat_distance(map(float, start_point), map(float, point)), 2)
+
 map_api_server = "https://static-maps.yandex.ru/v1"
 # ... и выполняем запрос
 response = requests.get(map_api_server, params=map_params)
+print("Адрес аптеки:", org_address)
+print("Название:", org_name)
+print("Время работы:", work_time)
+print("Расстояние:", dst, "м")
+
 im = BytesIO(response.content)
 opened_image = Image.open(im)
 opened_image.show()
