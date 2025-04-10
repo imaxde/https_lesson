@@ -1,6 +1,5 @@
 from io import BytesIO
 from search import object_position
-from distance import lonlat_distance
 import requests
 from PIL import Image
 
